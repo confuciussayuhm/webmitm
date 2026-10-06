@@ -1,0 +1,7 @@
+# Runtime dependencies. The official mitmproxy Docker image already bundles mitmproxy; the
+# Dockerfile adds PyYAML + mcp on top. This file is for a local (non-image) venv.
+mitmproxy>=12,<13
+PyYAML>=6
+# Optional: only needed if the MCP control server is enabled (mcp.enabled in the project).
+# Pinned to v1: v2 renamed FastMCP -> MCPServer and changed APIs (migrate later if needed).
+mcp>=1.2,<2

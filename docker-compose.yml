@@ -1,0 +1,31 @@
+# Run one webmitm project.
+#
+#   WEBMITM_PROJECT_NAME=example docker compose up          # foreground (shows logs)
+#   WEBMITM_PROJECT_NAME=example docker compose up -d       # detached
+#   docker compose down                                      # stop
+#
+# Host ports default to 8090/8091/9878 to avoid clashing with Burp (8080/8081) and a Burp MCP
+# server (9876). Override with WEBMITM_PROXY_PORT / WEBMITM_UI_PORT / WEBMITM_MCP_PORT if needed.
+#
+# Browser proxy  -> 127.0.0.1:${WEBMITM_PROXY_PORT:-8090}
+# mitmweb UI     -> http://127.0.0.1:${WEBMITM_UI_PORT:-8091}   (password: WEBMITM_WEB_PASSWORD)
+# MCP control    -> http://127.0.0.1:${WEBMITM_MCP_PORT:-9878}/mcp   (if enabled in webmitm.yaml)
+#
+# All three bind to loopback on purpose: proxy, UI and MCP are a control plane.
+services:
+  webmitm:
+    build: .
+    image: webmitm:latest
+    ports:
+      - "127.0.0.1:${WEBMITM_PROXY_PORT:-8090}:8080"
+      - "127.0.0.1:${WEBMITM_UI_PORT:-8091}:8081"
+      - "127.0.0.1:${WEBMITM_MCP_PORT:-9878}:9876"
+    volumes:
+      - ./projects/${WEBMITM_PROJECT_NAME:-example}:/project
+      # Shared CA (read-only): seed ca/mitmproxy-ca.pem from your Burp CA so every project/app/
+      # device reuses ONE already-trusted CA. See tools/burp-ca-to-mitm.sh. Harmless if empty.
+      - ./ca:/ca:ro
+    environment:
+      - WEBMITM_WEB_PASSWORD=${WEBMITM_WEB_PASSWORD:-webmitm}
+    stdin_open: true
+    tty: true

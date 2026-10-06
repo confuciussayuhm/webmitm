@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.mitm
+# Per-project runtime state: CA and saved flows.
+projects/*/.mitmproxy/
+projects/*/flows/
+# Shared CA material is a PRIVATE KEY — never commit it. Keep only the README.
+ca/*
+!ca/README.txt

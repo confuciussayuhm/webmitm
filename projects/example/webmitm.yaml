@@ -1,0 +1,18 @@
+# webmitm project config. This whole directory persists the engagement: this file, the
+# mitmproxy CA (.mitmproxy/), saved flows (flows/), and any project-specific addons (addons/).
+
+# Addons to load, in order. A bare name is resolved as a shipped addon, or else as a module
+# dropped in this project's addons/ directory. None are loaded by default.
+#
+#   load:
+#     - my_addon            # -> <project>/addons/my_addon.py (exposes build(config) or addons=[...])
+#   addons:
+#     my_addon:
+#       some_option: true
+load: []
+addons: {}
+
+mcp:
+  enabled: true
+  host: 0.0.0.0   # bind inside the container so the published 127.0.0.1:9876 reaches it
+  port: 9876
